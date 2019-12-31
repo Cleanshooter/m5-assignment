@@ -11,16 +11,15 @@ import mooc.vandy.java4android.birthdayprob.ui.OutputInterface;
  * The assignments are designed this way to simplify your early Android interactions.
  * Designing the assignments this way allows you to first learn key 'Java' features without
  * having to beforehand learn the complexities of Android.
- *
  */
 public class Logic
-       implements LogicInterface {
+        implements LogicInterface {
     /**
      * This is a String to be used in Logging (if/when you decide you
      * need it for debugging).
      */
     public static final String TAG =
-        Logic.class.getName();
+            Logic.class.getName();
 
     /**
      * This is the variable that stores our OutputInterface instance.
@@ -31,7 +30,7 @@ public class Logic
      * It is called 'mOut' because it is where we 'out-put' our
      * results. (It is also the 'in-put' from where we get values
      * from, but it only needs 1 name, and 'mOut' is good enough).
-    */
+     */
     OutputInterface mOut;
 
     /**
@@ -40,7 +39,7 @@ public class Logic
      * It assigns the passed in [MainActivity] instance
      * (which implements [OutputInterface]) to 'out'
      */
-    public Logic(OutputInterface out){
+    public Logic(OutputInterface out) {
         mOut = out;
     }
 
@@ -78,29 +77,42 @@ public class Logic
     public double calculate(int size, int count) {
         // TODO -- add your code here
         // Fixed array of "Birthdays" to track counts
-        boolean result = simulation(size);
-        mOut.println("Result: " + result);
+        int positiveResults = 0;
+        for (int i = 0; i < count; i++) {
+            boolean result = simulation(size, i);
+            if (result) {
+                positiveResults++;
+            }
+        }
 
-        return 0.0;
+        if (positiveResults == 0) {
+            return 0.0;
+        }
+        // mOut.println("Count: " + count);
+        // mOut.println("Probability: " + positiveResults);
+
+        return Double.valueOf(positiveResults) / Double.valueOf(count) * 100;
     }
 
-    private boolean simulation(int size) {
+    private boolean simulation(int size, int sim) {
         int[] birthdays = new int[365];
-        for (int i=0; i < size; i++) {
-            Random rnd = new Random();
-            rnd.setSeed(i);
-            int bday = rnd.nextInt(364);
-            birthdays[bday]++;
+        Random rnd = new Random();
+        rnd.setSeed(sim);
+        for (int i = 0; i < size; i++) {
+            int bDay = rnd.nextInt(365);
+            birthdays[bDay]++;
+            if (birthdays[bDay] == 2) {
+                return true;
+            }
         }
         // mOut.println(Arrays.toString(birthdays));
 
         // Did simulation result in two people with same birthday?
-        Arrays.sort(birthdays);
-        mOut.println(Arrays.toString(birthdays));
-        if(birthdays[364] >= 2) {
-            //everything is awesome
-            return true;
-        }
+        // Arrays.sort(birthdays);
+        // mOut.println(Arrays.toString(birthdays));
+        // if(birthdays[364] >= 2) {
+        //    return true;
+        // }
         return false;
     }
     // TODO - add your code here
